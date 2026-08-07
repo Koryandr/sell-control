@@ -1,0 +1,11 @@
+.lower {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 50px;
+}
+
+.bottom-icons {
+    display: flex;
+    gap: 30px;
+}

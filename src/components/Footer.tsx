@@ -9,11 +9,9 @@ const Footer = () => {
                 <Link to="/home">Домой</Link> 
                 <Link to="/products">Товары</Link>
                 <Link to="/sales">Продажи</Link>
-                
             </div>
         </footer>
         </>
-
         //<Link to="/analytics">Аналитика</Link>
     )
 }

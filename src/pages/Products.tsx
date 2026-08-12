@@ -1,8 +1,7 @@
 import "./Products.css"
-import { useState } from "react";
+import { products } from "../data/products";
 
 const Products = () => {
-
 
     return(
         <>
@@ -11,28 +10,18 @@ const Products = () => {
 
         <table>
             <thead>
-                    <tr>
-                        <th>Товар</th>
-                        <th>Количество</th>
-                    </tr>
+                <tr>
+                    <th>Товар</th>
+                    <th>Количество</th>
+                </tr>
             </thead>
             <tbody>
-                    <tr>
-                        <td>Смартфоны</td>
-                        <td>20 000</td>
+                {products.map(product => (
+                    <tr key={product.id}>
+                        <td>{product.name}</td>
+                        <td>{product.quantity}</td>
                     </tr>
-                    <tr>
-                        <td>Чайники</td>
-                        <td>3 500</td>
-                    </tr>
-                    <tr>
-                        <td>Кофе</td>
-                        <td>300</td>
-                    </tr>
-                    <tr>
-                        <td>Ноутбуки</td>
-                        <td>70 000</td>
-                    </tr>
+                ))}
             </tbody>
         </table>
         </>

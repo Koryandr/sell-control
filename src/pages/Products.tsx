@@ -1,11 +1,15 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import "./Products.css"
 import { products } from "../data/products";
 import Modal from 'react-modal';
 
+Modal.setAppElement("#root");
+
 const Products = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+    const [quantity, setQuantity] = useState("");
 
     const openModal = () =>{
         setModalIsOpen(true);
@@ -15,10 +19,21 @@ const Products = () => {
         setModalIsOpen(false);
     }
 
+    const handleAdd = () =>{
+        products.unshift({
+        id: products.length+1 ,
+        name: inputValue,
+        quantity: Number(quantity)});
+
+        closeModal();
+    }
+
     const modalContent = (
         <div>
-            <h2>Заголовок модального окна</h2>
-            <p>Текст модального окна</p>
+            <h2>Добавьте товар</h2>
+            <input type="text" value={inputValue} onChange={event => setInputValue(event.target.value)} placeholder="Названия товара"/><br/>
+            <input type="number" value={quantity} onChange={event => setQuantity(event.target.value)} placeholder="Количество"/><br/>
+            <button onClick={handleAdd}>Добавить</button>
             <button onClick={closeModal}>Закрыть</button>
         </div>
     );

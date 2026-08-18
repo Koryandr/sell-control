@@ -1,6 +1,6 @@
 import {useState} from "react";
 import "./Products.css"
-import { products } from "../data/products";
+import { products as initialProducts } from "../data/products";
 import Modal from 'react-modal';
 
 Modal.setAppElement("#root");
@@ -10,6 +10,10 @@ const Products = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [quantity, setQuantity] = useState("");
+    const [products, setProducts] = useState(initialProducts);
+    const [idDelete, setIdDelete] = useState(0);
+    const [deleteModalIsOpen,setDeleteModalIsOpen] = useState(false);
+    const [name, setName] = useState("");
 
     const openModal = () =>{
         setModalIsOpen(true);
@@ -19,11 +23,31 @@ const Products = () => {
         setModalIsOpen(false);
     }
 
+    const openDeleteModal = () =>{
+        setDeleteModalIsOpen(true);
+    }
+
+    const closeDeleteModal = () =>{
+        setDeleteModalIsOpen(false);
+    }
+
+    const handleDelete = (id: number,name: string) =>{
+        setIdDelete(id);
+        setName(name);
+        openDeleteModal();
+    }
+
+    const confirmDelete = () =>{
+        setProducts(products.filter(product => product.id !== idDelete));
+        closeDeleteModal();
+    }
+
     const handleAdd = () =>{
-        products.unshift({
-        id: products.length+1 ,
-        name: inputValue,
-        quantity: Number(quantity)});
+        setProducts([{
+            id: products.length + 1,
+            name: inputValue,
+            quantity: Number(quantity),
+        }, ...products])
 
         closeModal();
     }
@@ -38,6 +62,14 @@ const Products = () => {
         </div>
     );
 
+    const deleteModalContent = (
+            <div>
+                <h2>Вы действительно хотите удалить товар "{name}"?</h2>
+                <button onClick={confirmDelete}>Удалить</button>
+                <button onClick={closeDeleteModal}>Отмена</button>
+            </div>
+        )
+
     return(
         <>
         <h1>Товары</h1>
@@ -45,12 +77,16 @@ const Products = () => {
         <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className={"modal"} overlayClassName="modal-overlay">
             {modalContent}
         </Modal>
+        <Modal isOpen={deleteModalIsOpen} onRequestClose={closeDeleteModal} className={"modal"} overlayClassName="modal-overlay">
+                    {deleteModalContent}
+        </Modal>
 
         <table>
             <thead>
                 <tr>
                     <th>Товар</th>
                     <th>Количество</th>
+                    <th>Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,6 +94,7 @@ const Products = () => {
                     <tr key={product.id}>
                         <td>{product.name}</td>
                         <td>{product.quantity}</td>
+                        <td><button onClick={() => {handleDelete(product.id,product.name)}}>🗑️</button></td>
                     </tr>
                 ))}
             </tbody>

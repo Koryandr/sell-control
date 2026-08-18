@@ -99,7 +99,7 @@ const Sales = () => {
                         <td>{sale.name}</td>
                         <td>{sale.sum}</td>
                         <td>{sale.date}</td>
-                        <button onClick={() =>{handleDelete(sale.id,sale.name)}}>🗑️</button>
+                        <td><button onClick={() =>{handleDelete(sale.id,sale.name)}}>🗑️</button></td>
                     </tr>
                 ))}
             </tbody>

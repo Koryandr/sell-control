@@ -13,12 +13,15 @@ const Products = () => {
     const [products, setProducts] = useState(initialProducts);
     const [idDelete, setIdDelete] = useState(0);
     const [deleteModalIsOpen,setDeleteModalIsOpen] = useState(false);
-    const [name, setName] = useState("");
+    const [changeModalIsOpen,setChangeModalIsOpen] = useState(false);
+    const [productName, setProductName] = useState("");
+    const [idChange,setIdChange] = useState(0);
+    const [changeName, setChangeName] = useState("");
+    const [changeQuantity,setChangeQuantity] = useState("");
 
     const openModal = () =>{
         setModalIsOpen(true);
     }
-
     const closeModal = () =>{
         setModalIsOpen(false);
     }
@@ -26,20 +29,46 @@ const Products = () => {
     const openDeleteModal = () =>{
         setDeleteModalIsOpen(true);
     }
-
     const closeDeleteModal = () =>{
         setDeleteModalIsOpen(false);
     }
 
+    const openChangeModal = () =>{
+        setChangeModalIsOpen(true);
+    }
+    const closeChangeModal = () =>{
+        setChangeModalIsOpen(false);
+    }
+
     const handleDelete = (id: number,name: string) =>{
         setIdDelete(id);
-        setName(name);
+        setProductName(name);
         openDeleteModal();
+    }
+    const handleChange = (id: number, name: string, quantity: number) => {
+        setIdChange(id);
+        setProductName(name);
+        setChangeName(name)
+        setChangeQuantity(String(quantity));
+        openChangeModal();
     }
 
     const confirmDelete = () =>{
         setProducts(products.filter(product => product.id !== idDelete));
         closeDeleteModal();
+    }
+    const confirmSave = () =>{
+        setProducts(products.map(product =>{
+            if(product.id === idChange){
+                return{
+                    ...product,
+                    name: changeName,
+                    quantity: Number(changeQuantity)
+                }
+            }
+            return product;
+        }))
+        closeChangeModal();
     }
 
     const handleAdd = () =>{
@@ -61,24 +90,36 @@ const Products = () => {
             <button onClick={closeModal}>Закрыть</button>
         </div>
     );
-
     const deleteModalContent = (
             <div>
-                <h2>Вы действительно хотите удалить товар "{name}"?</h2>
+                <h2>Вы действительно хотите удалить товар "{productName}"?</h2>
                 <button onClick={confirmDelete}>Удалить</button>
                 <button onClick={closeDeleteModal}>Отмена</button>
             </div>
-        )
+    );
+    const changeModalContent = (
+        <div>
+            <h2>Вы действительно хотите редактировать товар "{productName}"?</h2>
+            <input type="text" value={changeName} onChange={event => {setChangeName(event.target.value)}} placeholder="Названия товара"/><br/>
+            <input type="number" value={changeQuantity} onChange={event => {setChangeQuantity(event.target.value)}} placeholder="Количество"/><br/>
+            <button onClick={confirmSave}>Сохранить</button>
+            <button onClick={closeChangeModal}>Отмена</button>
+        </div>
+    )
 
     return(
         <>
         <h1>Товары</h1>
         <button onClick={openModal}>+ Добавить товар</button>
+
         <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className={"modal"} overlayClassName="modal-overlay">
             {modalContent}
         </Modal>
         <Modal isOpen={deleteModalIsOpen} onRequestClose={closeDeleteModal} className={"modal"} overlayClassName="modal-overlay">
                     {deleteModalContent}
+        </Modal>
+        <Modal isOpen={changeModalIsOpen} onRequestClose={closeChangeModal} className={"modal"} overlayClassName="modal-overlay">
+                    {changeModalContent}
         </Modal>
 
         <table>
@@ -94,7 +135,8 @@ const Products = () => {
                     <tr key={product.id}>
                         <td>{product.name}</td>
                         <td>{product.quantity}</td>
-                        <td><button onClick={() => {handleDelete(product.id,product.name)}}>🗑️</button></td>
+                        <td><button onClick={() => {handleDelete(product.id,product.name)}}>🗑️</button>
+                        <button onClick={() => {handleChange(product.id,product.name,product.quantity)}}>✏️</button></td>
                     </tr>
                 ))}
             </tbody>
